@@ -4,7 +4,7 @@
 
 ## Overview
 
-Windows batch script that monitors and manages Windows services. Reads services from CSV file, checks status, starts stopped services, and generates logs.
+Windows batch script that monitors and manages Windows services and applications. Reads services from `services.csv` and applications from `applications.csv`, checks their status, starts stopped services/applications, and generates logs.
 
 ## Quick Start
 
@@ -13,15 +13,22 @@ Windows batch script that monitors and manages Windows services. Reads services 
    "CompassService","AlertonCompassIgnite1","Alerton Compass Kafka","EthuioService","AlertonPointDataService1"
    ```
 
-2. Run as Administrator:
+2. (Optional) Edit `applications.csv` with full paths to executables:
+   ```csv
+   "C:\Windows\System32\notepad.exe","C:\Path\To\App.exe"
+   ```
+
+3. Run as Administrator:
    ```batch
    compboot.bat
    ```
 
 ## Files
 
-- `compboot.bat` - Main script
-- `services.csv` - Service list
+- `compboot.bat` - Launcher script (elevates permissions)
+- `execute.ps1` - Main PowerShell logic
+- `services.csv` - List of service names
+- `applications.csv` - List of application paths
 - `logs/` - Generated logs and CSV reports
 
 ## Output
@@ -33,7 +40,8 @@ Windows batch script that monitors and manages Windows services. Reads services 
 
 - **Access Denied:** Run as Administrator
 - **Service Not Found:** Check exact service name with `sc query`
-- **CSV Errors:** Use quotes and commas: `"Service1","Service2"`
+- **Application Not Found:** Ensure the full path in `applications.csv` is correct and accessible.
+- **CSV Errors:** Use quotes and commas: `"Item1","Item2"`
 
 ## License
 
