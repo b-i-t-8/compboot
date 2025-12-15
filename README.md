@@ -1,6 +1,6 @@
 # CompBoot - Computer Boot Service Monitor
 
-**Version:** 0.1.4
+**Version:** 1.0.0
 
 ## Overview
 
