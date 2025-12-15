@@ -23,7 +23,19 @@ foreach ($file in $logFiles) {
     try {
         $csvData = Import-Csv -Path $file.FullName
         if ($null -ne $csvData) {
-            $allLogData += $csvData
+            foreach ($row in $csvData) {
+                # Normalize data for v1.1 schema
+                $entityName = if ($row."Entity Name") { $row."Entity Name" } else { $row."Service Name" }
+                $type = if ($row."Type") { $row."Type" } else { "Legacy" }
+                
+                $allLogData += [PSCustomObject]@{
+                    "Entity Name"  = $entityName
+                    "Type"         = $type
+                    "Status"       = $row.Status
+                    "Timestamp"    = $row.Timestamp
+                    "Action Taken" = $row."Action Taken"
+                }
+            }
         }
     } catch {
         Write-Host "  Error processing file $($file.Name): $_"
@@ -35,7 +47,7 @@ foreach ($file in $logFiles) {
 $sortedData = $allLogData | Sort-Object -Property "Timestamp"
 
 # Export the rolled-up data to a new CSV file
-$sortedData | Export-Csv -Path $rollupFile -NoTypeInformation
+$sortedData | Select-Object "Entity Name", "Type", "Status", "Timestamp", "Action Taken" | Export-Csv -Path $rollupFile -NoTypeInformation
 
 Write-Host ""
 Write-Host "Log rollup complete."
