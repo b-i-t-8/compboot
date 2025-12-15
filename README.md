@@ -1,47 +1,47 @@
 # CompBoot - Computer Boot Service Monitor
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 
 ## Overview
 
-Windows batch script that monitors and manages Windows services and applications. Reads services from `services.csv` and applications from `applications.csv`, checks their status, starts stopped services/applications, and generates logs.
+Windows batch/PowerShell solution that monitors and manages a specific application and its corresponding Windows service. It implements "XOR" logic to ensure the software is running in one form or another:
+
+1.  **Check Application:** If the application executable is running, the script logs it and **exits** (does not touch the service).
+2.  **Check Service:** If the application is **not** running, the script checks the Windows Service. If the service is stopped, it attempts to start it.
+
+This prevents conflicts where both the desktop application and the background service might try to run simultaneously.
 
 ## Quick Start
 
-1. Edit `services.csv` with your services:
-   ```csv
-   "CompassService","AlertonCompassIgnite1","Alerton Compass Kafka","EthuioService","AlertonPointDataService1"
-   ```
+1.  Edit `config.yaml` to define your target application and service:
+    ```yaml
+    ApplicationPath: "C:\Alerton\Compass\2.0\System\bactalk.exe"
+    ServiceName: "CompassService"
+    ```
 
-2. (Optional) Edit `applications.csv` with full paths to executables:
-   ```csv
-   "C:\Windows\System32\notepad.exe","C:\Path\To\App.exe"
-   ```
-
-3. Run as Administrator:
-   ```batch
-   compboot.bat
-   ```
+2.  Run as Administrator:
+    ```batch
+    compboot.bat
+    ```
 
 ## Files
 
-- `compboot.bat` - Launcher script (elevates permissions)
-- `execute.ps1` - Main PowerShell logic
-- `services.csv` - List of service names
-- `applications.csv` - List of application paths
-- `logs/` - Generated logs and CSV reports
+-   `compboot.bat` - Launcher script (elevates permissions)
+-   `execute.ps1` - Main PowerShell logic
+-   `config.yaml` - Configuration file
+-   `logs/` - Generated logs and CSV reports
 
 ## Output
 
-- **Log:** `logs\log_YYYYMMDDHHMMSS.log`
-- **CSV:** `logs\service_status_YYYYMMDDHHMMSS.csv`
+-   **Log:** `logs\log_YYYYMMDDHHMMSS.log`
+-   **CSV:** `logs\service_status_YYYYMMDDHHMMSS.csv`
 
 ## Troubleshooting
 
-- **Access Denied:** Run as Administrator
-- **Service Not Found:** Check exact service name with `sc query`
-- **Application Not Found:** Ensure the full path in `applications.csv` is correct and accessible.
-- **CSV Errors:** Use quotes and commas: `"Item1","Item2"`
+-   **Access Denied:** Run as Administrator
+-   **Service Not Found:** Check exact service name with `sc query`
+-   **Application Not Found:** Ensure the full path in `config.yaml` is correct and accessible.
+-   **YAML Errors:** Ensure `Key: "Value"` format is preserved.
 
 ## License
 
