@@ -24,9 +24,22 @@ This prevents conflicts where both the desktop application and the background se
     compboot.bat
     ```
 
+## Automatic Setup (Scheduled Task)
+
+To automatically run this script at **System Startup** and **Daily at Midnight**, run the setup script as Administrator:
+
+```batch
+setup_compboot.bat
+```
+
+This will create two Windows Scheduled Tasks running with `SYSTEM` privileges:
+1.  `Compass Boot Workaround (on start)`
+2.  `Compass Boot Workaround (daily)`
+
 ## Files
 
 -   `compboot.bat` - Launcher script (elevates permissions)
+-   `setup_compboot.bat` - Installs scheduled tasks
 -   `execute.ps1` - Main PowerShell logic
 -   `config.yaml` - Configuration file
 -   `logs/` - Generated logs and CSV reports
